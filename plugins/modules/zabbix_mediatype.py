@@ -160,6 +160,14 @@ options:
             - SSL verify peer for SMTP.
             - Can be specified when I(smtp_security=STARTTLS) or I(smtp_security=SSL/TLS)
         default: false
+    content_type:
+        type: 'integer'
+        description:
+            - Message format.
+            - Required when I(type=email).
+        choices:
+            - plain_text
+            - html
     message_text_limit:
         type: 'str'
         description:
@@ -500,7 +508,8 @@ class MediaTypeModule(ZabbixBase):
                 smtp_verify_host=truths.get(str(self._module.params['smtp_verify_host'])),
                 smtp_verify_peer=truths.get(str(self._module.params['smtp_verify_peer'])),
                 username=self._module.params['username'],
-                passwd=self._module.params['password']
+                passwd=self._module.params['password'],
+                content_type={'plain_text': '0', 'html': '1'}.get(str(self._module.params['content_type'])),
             ))
             if LooseVersion(self._zbx_api_version) >= LooseVersion('6.0'):
                 if parameters['smtp_authentication'] == '0':
@@ -681,6 +690,7 @@ def main():
         smtp_authentication=dict(type='bool', default=False, required=False),
         smtp_verify_host=dict(type='bool', default=False, required=False),
         smtp_verify_peer=dict(type='bool', default=False, required=False),
+        content_type=dict(type='str', default='html', required=False),
         # EZ Text
         message_text_limit=dict(type='str', required=False, choices=['USA', 'Canada']),
         # Webhook
