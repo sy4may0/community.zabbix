@@ -161,7 +161,7 @@ options:
             - Can be specified when I(smtp_security=STARTTLS) or I(smtp_security=SSL/TLS)
         default: false
     content_type:
-        type: 'integer'
+        type: 'str'
         description:
             - Message format.
             - Required when I(type=email).
@@ -795,36 +795,4 @@ def main():
                             _id=mediatype_id
                         )
                     )
-                mediatype_id = mediatype.update_mediatype(mediatypeid=mediatype_id, **params_to_update)
-                module.exit_json(
-                    changed=True,
-                    diff=diff,
-                    msg="Mediatype updated. Name: {name}, ID: {_id}".format(
-                        name=name,
-                        _id=mediatype_id
-                    )
-                )
-    else:
-        if state == "absent":
-            module.exit_json(changed=False)
-        else:
-            if module.check_mode:
-                module.exit_json(
-                    changed=True,
-                    msg="Mediatype would have been created. Name: {name}, ID: {_id}".format(
-                        name=name,
-                        _id=mediatype_id
-                    )
-                )
-            mediatype_id = mediatype.create_mediatype(**parameters)
-            module.exit_json(
-                changed=True,
-                msg="Mediatype created: {name}, ID: {_id}".format(
-                    name=name,
-                    _id=mediatype_id
-                )
-            )
-
-
-if __name__ == '__main__':
-    main()
+                mediatype_id = mediatype.update_mediatype(mediatypeid=mediatype_id, **params_to_update
